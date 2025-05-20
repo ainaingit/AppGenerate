@@ -4,11 +4,15 @@ export default function RootLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: false, // Cache le header sur tous les écrans
+        headerShown: false, // Hide header globally
       }}
     >
       <Stack.Screen name="index" />
+       {/* Main app tabs screen after login */}
+      <Stack.Screen
+        name="(tabs)"
+        options={{ title: "Home Tabs" }}
+      />
     </Stack>
   );
 }
-

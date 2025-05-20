@@ -11,7 +11,8 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
-import { handleLogin } from "../functions/handleLogin"; // Adjust path as needed
+import { handleLogin } from "../functions/handleLogin";
+import { useRouter } from "expo-router"; // ✅ Import router
 
 export default function Login({
   onSwitchToSignup,
@@ -19,6 +20,14 @@ export default function Login({
   onSwitchToSignup: () => void;
 }) {
   const [surname, setSurname] = useState("");
+  const router = useRouter(); // ✅ Get router instance
+
+  const onPressLogin = async () => {
+    const success = await handleLogin(surname);
+    if (success) {
+      router.replace("/(tabs)"); // ✅ Now it’s safe
+    }
+  };
 
   return (
     <>
@@ -33,17 +42,14 @@ export default function Login({
           <Text style={styles.label}>Your sweet surname</Text>
           <TextInput
             placeholder="Type your lovely surname"
-            placeholderTextColor="#000" // Black placeholder
+            placeholderTextColor="#000"
             autoCapitalize="none"
             style={styles.input}
             value={surname}
             onChangeText={setSurname}
           />
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => handleLogin(surname)}
-          >
+          <TouchableOpacity style={styles.button} onPress={onPressLogin}>
             <Text style={styles.buttonText}>Let’s go 💕</Text>
           </TouchableOpacity>
 
