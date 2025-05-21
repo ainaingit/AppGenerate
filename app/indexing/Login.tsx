@@ -25,7 +25,7 @@ export default function Login({
   const onPressLogin = async () => {
     const success = await handleLogin(surname);
     if (success) {
-      router.replace("/(tabs)"); // ✅ Now it’s safe
+      router.replace("/(tabs)/home"); // ✅ Now it’s safe
     }
   };
 

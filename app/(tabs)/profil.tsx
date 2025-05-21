@@ -10,7 +10,7 @@ import {
   Alert,
   Platform,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context"; // Amélioration Android
+import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../utils/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import * as SecureStore from "expo-secure-store";
@@ -29,7 +29,7 @@ export default function ProfileScreen() {
 
         if (!session) {
           Alert.alert("Session expirée", "Veuillez vous reconnecter.");
-          router.replace("/");
+          router.replace("/"); // redirection vers écran hors tabs
           return;
         }
 
@@ -59,6 +59,19 @@ export default function ProfileScreen() {
 
     loadUser();
   }, []);
+
+  const onLogoutPress = async () => {
+    const success = await handleLogout();
+    if (success) {
+      Alert.alert("Déconnexion", "Vous avez été déconnecté.");
+      router.replace("/"); // redirige vers la racine hors tabs
+    } else {
+      Alert.alert(
+        "Erreur",
+        "Une erreur est survenue lors de la déconnexion. Veuillez réessayer."
+      );
+    }
+  };
 
   if (loading)
     return (
@@ -100,7 +113,7 @@ export default function ProfileScreen() {
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.button, styles.followBtn]}
-              onPress={handleLogout}
+              onPress={onLogoutPress}
             >
               <Text style={[styles.buttonText, { color: "#4C51BF" }]}>
                 Déconnexion

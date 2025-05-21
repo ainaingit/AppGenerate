@@ -1,9 +1,12 @@
+// app/index.tsx
 import { Text, View } from "react-native";
-import FirebaseTest from "./tests/firebasetest";
 import Login from "./indexing/Login";
-import Signup from "./indexing/Signup";
+import SessionGate from "./auth/AuthGate"; // 🔁 chemin selon ton projet
+
 export default function Index() {
   return (
-    < Login/>
+    <SessionGate>
+      <Login />
+    </SessionGate>
   );
 }
