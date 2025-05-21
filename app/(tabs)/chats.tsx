@@ -1,46 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   TouchableOpacity,
   TextInput,
   Modal,
+  FlatList,
   SafeAreaView,
 } from "react-native";
-
-const sampleChats = [
-  { id: "1", name: "Alice", lastMessage: "Hey! How are you?" },
-  { id: "2", name: "Bob", lastMessage: "Did you check that link?" },
-  { id: "3", name: "Charlie", lastMessage: "Let's meet tomorrow." },
-];
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../utils/firebase";
+import { useRouter } from "expo-router";
 
 export default function ChatsScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [allUsers, setAllUsers] = useState([]);
+  const router = useRouter();
 
-  // Just for demo, filter sample users by name
-  const filteredUsers = sampleChats.filter((user) =>
-    user.name.toLowerCase().includes(searchQuery.toLowerCase())
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const usersSnapshot = await getDocs(collection(db, "users"));
+        const users = usersSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setAllUsers(users);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    if (modalVisible) {
+      fetchUsers();
+    }
+  }, [modalVisible]);
+
+  const filteredUsers = allUsers.filter((user) =>
+    user.username?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList
-        data={sampleChats}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.chatItem}>
-            <Text style={styles.chatName}>{item.name}</Text>
-            <Text style={styles.chatLastMessage}>{item.lastMessage}</Text>
-          </View>
-        )}
-        ListEmptyComponent={
-          <Text style={styles.noChatsText}>Your messages await 💌</Text>
-        }
-      />
-
       <TouchableOpacity
         style={styles.newDiscussionButton}
         onPress={() => setModalVisible(true)}
@@ -59,7 +62,7 @@ export default function ChatsScreen() {
             <Text style={styles.modalTitle}>Find a person</Text>
             <TextInput
               style={styles.searchInput}
-              placeholder="Search by name..."
+              placeholder="Search by username..."
               value={searchQuery}
               onChangeText={setSearchQuery}
               autoFocus={true}
@@ -71,13 +74,19 @@ export default function ChatsScreen() {
                 <TouchableOpacity
                   style={styles.userItem}
                   onPress={() => {
-                    // Handle selecting a user here, then close modal
-                    alert(`Start chat with ${item.name}`);
                     setModalVisible(false);
                     setSearchQuery("");
+                    // Navigation vers /visualchat avec params
+                    router.push({
+                      pathname: "/visualchat",
+                      params: {
+                        userId: item.id,
+                        surname: item.surname,
+                      },
+                    });
                   }}
                 >
-                  <Text style={styles.userName}>{item.name}</Text>
+                  <Text style={styles.userName}>{item.surname}</Text>
                 </TouchableOpacity>
               )}
               ListEmptyComponent={
@@ -100,27 +109,6 @@ export default function ChatsScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff8f8" },
-  chatItem: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderColor: "#eee",
-  },
-  chatName: {
-    fontWeight: "600",
-    fontSize: 18,
-    color: "#d4376e",
-  },
-  chatLastMessage: {
-    marginTop: 4,
-    fontSize: 14,
-    color: "#666",
-  },
-  noChatsText: {
-    marginTop: 20,
-    textAlign: "center",
-    color: "#d4376e",
-    fontSize: 18,
-  },
   newDiscussionButton: {
     position: "absolute",
     right: 20,
@@ -189,3 +177,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+// This code defines a React Native component for a chat screen. It includes a button to open a modal for searching users by username, and displays a list of filtered users based on the search query. When a user is selected, it navigates to a visual chat screen with the user's ID and surname as parameters.

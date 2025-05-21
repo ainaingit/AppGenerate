@@ -29,7 +29,7 @@ export const handleLogin = async (surname: string): Promise<boolean> => {
 
       await SecureStore.setItemAsync("userSession", JSON.stringify(sessionData));
 
-      Alert.alert("Welcome back 💖", `Hello again, ${surname}! 🌸`);
+     //  Alert.alert("Welcome back 💖", `Hello again, ${surname}! 🌸`);
       return true;
     } else {
       Alert.alert("Oops 🥺", "Surname not found. Please try again or sign up.");
