@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "kantoo_expo",
-    "slug": "kantoo_expo",
+    "name": "AppGenerate",
+    "slug": "AppGenerate",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "kantooexpo",
+    "scheme": "appgenerate",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -33,8 +33,7 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ],
-      "expo-secure-store"
+      ]
     ],
     "experiments": {
       "typedRoutes": true

@@ -1,9 +1,15 @@
 import { Text, View } from "react-native";
-import FirebaseTest from "./tests/firebasetest";
-import Login from "./indexing/Login";
-import Signup from "./indexing/Signup";
+
 export default function Index() {
   return (
-    < Login/>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Text>Edit app/index.tsx to edit this screen.</Text>
+    </View>
   );
 }
